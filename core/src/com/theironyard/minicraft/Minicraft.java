@@ -15,15 +15,21 @@ public class Minicraft extends ApplicationAdapter {
     SpriteBatch batch;
     TextureRegion down, up, right, stand, left, downF, upF;
     Animation walkX, walkUp, walkDown;
-    static final int WIDTH = 18;
-    static final int HEIGHT = 26;
+    static final int WIDTH = 100;
+    static final int HEIGHT = 100;
     static final float MAX_VELOCITY = 100;
     float x, y, xv, yv, time;
     boolean faceRight = true;
-    FitViewport viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    FitViewport fitViewport;
+
 
     @Override
+    public void resize(int width, int height) {
+        fitViewport.update(width, height);
+    }
+    @Override
     public void create () {
+        fitViewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch = new SpriteBatch();
 
         Texture tiles = new Texture("tiles.png");
@@ -76,6 +82,7 @@ public class Minicraft extends ApplicationAdapter {
         }
         batch.end();
     }
+
     float decelerate(float v, float deceleration) { //closer to 1 the slower the decelaration
         v *= deceleration;
         if (Math.abs(v) < 1) v = 0f;
@@ -99,18 +106,18 @@ public class Minicraft extends ApplicationAdapter {
         }
         y += yv * Gdx.graphics.getDeltaTime();
         x += xv * Gdx.graphics.getDeltaTime();
-
-        if (y < 0) {
+        // teleports the sprite to opposite side of screen
+        if (y < (0 - HEIGHT)) {
+            y = Gdx.graphics.getHeight() - HEIGHT;
+        }
+        if (y > Gdx.graphics.getHeight()) {
             y = 0;
         }
-        if (y > viewport.getScreenHeight()) {
-            y = viewport.getScreenHeight();
+        if (x < 0 - WIDTH) {
+            x = Gdx.graphics.getWidth() - WIDTH;
         }
-        if (x < 0) {
+        if (x > Gdx.graphics.getWidth()) {
             x = 0;
-        }
-        if (x > viewport.getScreenWidth()) {
-            x = viewport.getScreenWidth();
         }
 
 
