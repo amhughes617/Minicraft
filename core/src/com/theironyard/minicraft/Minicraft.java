@@ -17,7 +17,7 @@ public class Minicraft extends ApplicationAdapter {
     Animation walkX, walkUp, walkDown;
     static final int WIDTH = 100;
     static final int HEIGHT = 100;
-    static final float MAX_VELOCITY = 100;
+    static final float MAX_VELOCITY = 200;
     float x, y, xv, yv, time;
     boolean faceRight = true;
     FitViewport fitViewport;
@@ -108,16 +108,16 @@ public class Minicraft extends ApplicationAdapter {
         x += xv * Gdx.graphics.getDeltaTime();
         // teleports the sprite to opposite side of screen
         if (y < (0 - HEIGHT)) {
-            y = Gdx.graphics.getHeight() - HEIGHT;
+            y = Gdx.graphics.getHeight();
         }
         if (y > Gdx.graphics.getHeight()) {
-            y = 0;
+            y = 0 - HEIGHT;
         }
         if (x < 0 - WIDTH) {
-            x = Gdx.graphics.getWidth() - WIDTH;
+            x = Gdx.graphics.getWidth();
         }
         if (x > Gdx.graphics.getWidth()) {
-            x = 0;
+            x = 0 - WIDTH;
         }
 
 
