@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import java.util.Random;
+
 /**
  * Created by alexanderhughes on 2/19/16.
  */
@@ -36,22 +38,36 @@ public class Zombie extends Dude {
     }
 
     void move() {
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            yv = MAX_VELOCITY;
+        Random r = new Random();
+        boolean moveUp = r.nextBoolean();
+        boolean moveRight = r.nextBoolean();
+        boolean canGoHor = r.nextBoolean();
+        boolean canGoVer = r.nextBoolean();
+        float moveMax = 400;
+        float moveMin = 100;
+        float movement = r.nextFloat() * ((moveMax - moveMin) + moveMin);
+        if (moveUp && canGoVer) {
+            //y += ( * Gdx.graphics.getDeltaTime();;
+            yv = MAX_VELOCITY + movement;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            yv = -1 * MAX_VELOCITY;
+        if ((!moveUp) && canGoVer) {
+           // y -= (r.nextFloat() * (moveMax - moveMin) + moveMin) * Gdx.graphics.getDeltaTime();;
+            yv = -1 * MAX_VELOCITY - movement;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            xv = MAX_VELOCITY;
+        if (moveRight && canGoHor) {
+           // x += (r.nextFloat() * (moveMax - moveMin) + moveMin) * Gdx.graphics.getDeltaTime();;
+            xv = MAX_VELOCITY + movement;
             faceRight = true;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            xv = MAX_VELOCITY * -1;
+        if ((!moveRight) && canGoHor) {
+            xv = MAX_VELOCITY * -1 - movement;
             faceRight = false;
         }
-        y += yv * Gdx.graphics.getDeltaTime();
         x += xv * Gdx.graphics.getDeltaTime();
+        y += yv * Gdx.graphics.getDeltaTime();
+        canGoVer = false;
+        canGoHor = false;
+
         // teleports the sprite to opposite side of screen
         if (y < (0 - HEIGHT)) {
             y = Gdx.graphics.getHeight();
@@ -65,8 +81,6 @@ public class Zombie extends Dude {
         if (x > Gdx.graphics.getWidth()) {
             x = 0 - WIDTH;
         }
-
-
         yv = decelerate(yv, 0.5f);
         xv = decelerate(xv, 0.5f);
     }

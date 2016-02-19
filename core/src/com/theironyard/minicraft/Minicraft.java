@@ -67,58 +67,41 @@ public class Minicraft extends ApplicationAdapter {
     public void render () {
         time += Gdx.graphics.getDeltaTime();
 
-            player.move();
-            zombie.move();
-            draw(player, zombie);
+        player.move();
+        zombie.move();
+        batch.begin();
+        draw(player);
+        draw(zombie);
+        batch.end();
     }
 
-    void draw(Player player, Zombie zombie) {
+    void draw(Dude dude) {
 
         TextureRegion img;
-        if (player.yv > 0) {
-            img = player.walkUp.getKeyFrame(time, true);
+        if (dude.yv > 0) {
+            img = dude.walkUp.getKeyFrame(time, true);
         }
-        else if (player.yv < 0) {
-            img = player.walkDown.getKeyFrame(time, true);
+        else if (dude.yv < 0) {
+            img = dude.walkDown.getKeyFrame(time, true);
         }
-        else if (player.xv != 0) {
-            img = player.walkX.getKeyFrame(time, true);
-        }
-        else {
-            img = player.stand;
-        }
-        TextureRegion imgZ;
-        if (zombie.yv > 0) {
-            imgZ = zombie.walkUp.getKeyFrame(time, true);
-        }
-        else if (zombie.yv < 0) {
-            imgZ = zombie.walkDown.getKeyFrame(time, true);
-        }
-        else if (zombie.xv != 0) {
-            imgZ = zombie.walkX.getKeyFrame(time, true);
+        else if (dude.xv != 0) {
+            img = dude.walkX.getKeyFrame(time, true);
         }
         else {
-            imgZ = zombie.stand;
+            img = dude.stand;
         }
 
         Gdx.gl.glClearColor(0, 0.5f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.begin();
-        if (player.faceRight) {
-            batch.draw(img, player.x, player.y, player.WIDTH, player.HEIGHT);
+
+        if (dude.faceRight) {
+            batch.draw(img, dude.x, dude.y, dude.WIDTH, dude.HEIGHT);
         }
         else {
-            batch.draw(img, player.WIDTH + player.x, player.y, -1 * player.WIDTH, player.HEIGHT);
-        }
-        if (zombie.faceRight) {
-            batch.draw(imgZ, zombie.x, zombie.y, zombie.WIDTH, zombie.HEIGHT);
-        }
-        else {
-            batch.draw(imgZ, zombie.WIDTH + zombie.x, zombie.y, -1 * zombie.WIDTH, zombie.HEIGHT);
+            batch.draw(img, dude.WIDTH + dude.x, dude.y, -1 * dude.WIDTH, dude.HEIGHT);
         }
 
-        batch.end();
     }
 
 
