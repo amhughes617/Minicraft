@@ -15,6 +15,8 @@ import java.util.Random;
  */
 public class Zombie extends Dude {
     boolean moveUp, moveRight, movesV, movesH;
+    float time2;
+    boolean canMove = true;
     public void enemyCreate() {
 
         Texture tiles = new Texture("tiles.png");
@@ -37,34 +39,38 @@ public class Zombie extends Dude {
         walkDown = new Animation(0.1f, down, downF);
     }
 
-    void move(boolean canMove) {
-        Minicraft.time2 += Gdx.graphics.getDeltaTime();
+    void move() {
+        time2 += Gdx.graphics.getDeltaTime();
+        float minM = 0.5f;
+        float maxM = 3;
         Random r = new Random();
+
+        if (time2 > (r.nextFloat() * (maxM - minM) + minM)) {
+            canMove = true;
+        }
         if (canMove) {
             moveUp = r.nextBoolean();
             moveRight = r.nextBoolean();
             movesH = r.nextBoolean();
             movesV = r.nextBoolean();
-            Minicraft.time2 = 0;
+            time2 = 0;
         }
-        float minM = 100;
-        float maxM = 500;
             float movement = r.nextFloat() * (maxM - minM) + minM;
             if (moveUp && movesV) {
-                yv = MAX_VELOCITY;
+                yv = MAX_VELOCITY * 0.75f;
             //    y += movement * Gdx.graphics.getDeltaTime();
             }
-            else if (!moveUp && movesV) {
-                yv = -1 * MAX_VELOCITY;
+            if (!moveUp && movesV) {
+                yv = -1 * (MAX_VELOCITY * 0.75f);
             //    y -= movement * Gdx.graphics.getDeltaTime() ;
             }
             if (moveRight && movesH) {
-                xv = MAX_VELOCITY;
+                xv = MAX_VELOCITY * 0.75f;
                 faceRight = true;
            //     x += movement * Gdx.graphics.getDeltaTime();
             }
-            else if (!moveRight && movesH) {
-                xv = MAX_VELOCITY * -1;
+            if (!moveRight && movesH) {
+                xv = (MAX_VELOCITY * 0.75f) * -1;
                 faceRight = false;
             //    x -= movement * Gdx.graphics.getDeltaTime();
             }
@@ -72,20 +78,22 @@ public class Zombie extends Dude {
         y += yv * Gdx.graphics.getDeltaTime();
 
         // teleports the sprite to opposite side of screen
-        if (y < (0 - HEIGHT)) {
+        if (y < (0 - HEIGHT * 0.25)) {
             y = Gdx.graphics.getHeight();
         }
         if (y > Gdx.graphics.getHeight()) {
-            y = 0 - HEIGHT;
+            y = 0 - HEIGHT * 0.25f;
         }
-        if (x < 0 - WIDTH) {
+        if (x < 0 - WIDTH * 0.25) {
             x = Gdx.graphics.getWidth();
         }
         if (x > Gdx.graphics.getWidth()) {
-            x = 0 - WIDTH;
+            x = 0 - WIDTH * 0.25f;
         }
         yv = decelerate(yv, 0.5f);
         xv = decelerate(xv, 0.5f);
+
+        canMove = false;
     }
 
     float decelerate(float v, float deceleration) { //closer to 1 the slower the decelaration
