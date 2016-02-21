@@ -14,7 +14,7 @@ import java.util.Random;
  * Created by alexanderhughes on 2/19/16.
  */
 public class Zombie extends Dude {
-
+    boolean moveUp, moveRight, movesV, movesH;
     public void enemyCreate() {
 
         Texture tiles = new Texture("tiles.png");
@@ -37,36 +37,39 @@ public class Zombie extends Dude {
         walkDown = new Animation(0.1f, down, downF);
     }
 
-    void move() {
+    void move(boolean canMove) {
+        Minicraft.time2 += Gdx.graphics.getDeltaTime();
         Random r = new Random();
-        boolean moveUp = r.nextBoolean();
-        boolean moveRight = r.nextBoolean();
-        boolean canGoHor = r.nextBoolean();
-        boolean canGoVer = r.nextBoolean();
-        float moveMax = 400;
-        float moveMin = 100;
-        float movement = r.nextFloat() * ((moveMax - moveMin) + moveMin);
-        if (moveUp && canGoVer) {
-            //y += ( * Gdx.graphics.getDeltaTime();;
-            yv = MAX_VELOCITY + movement;
+        if (canMove) {
+            moveUp = r.nextBoolean();
+            moveRight = r.nextBoolean();
+            movesH = r.nextBoolean();
+            movesV = r.nextBoolean();
+            Minicraft.time2 = 0;
         }
-        if ((!moveUp) && canGoVer) {
-           // y -= (r.nextFloat() * (moveMax - moveMin) + moveMin) * Gdx.graphics.getDeltaTime();;
-            yv = -1 * MAX_VELOCITY - movement;
-        }
-        if (moveRight && canGoHor) {
-           // x += (r.nextFloat() * (moveMax - moveMin) + moveMin) * Gdx.graphics.getDeltaTime();;
-            xv = MAX_VELOCITY + movement;
-            faceRight = true;
-        }
-        if ((!moveRight) && canGoHor) {
-            xv = MAX_VELOCITY * -1 - movement;
-            faceRight = false;
-        }
+        float minM = 100;
+        float maxM = 500;
+            float movement = r.nextFloat() * (maxM - minM) + minM;
+            if (moveUp && movesV) {
+                yv = MAX_VELOCITY;
+            //    y += movement * Gdx.graphics.getDeltaTime();
+            }
+            else if (!moveUp && movesV) {
+                yv = -1 * MAX_VELOCITY;
+            //    y -= movement * Gdx.graphics.getDeltaTime() ;
+            }
+            if (moveRight && movesH) {
+                xv = MAX_VELOCITY;
+                faceRight = true;
+           //     x += movement * Gdx.graphics.getDeltaTime();
+            }
+            else if (!moveRight && movesH) {
+                xv = MAX_VELOCITY * -1;
+                faceRight = false;
+            //    x -= movement * Gdx.graphics.getDeltaTime();
+            }
         x += xv * Gdx.graphics.getDeltaTime();
         y += yv * Gdx.graphics.getDeltaTime();
-        canGoVer = false;
-        canGoHor = false;
 
         // teleports the sprite to opposite side of screen
         if (y < (0 - HEIGHT)) {

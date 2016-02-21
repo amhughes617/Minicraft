@@ -24,10 +24,12 @@ public class Minicraft extends ApplicationAdapter {
 //    boolean faceRight = true;
     SpriteBatch batch;
     float time;
+    static float time2;
     Player player = new Player();
     Zombie zombie = new Zombie();
     Dude dude = new Dude();
     FitViewport fitViewport;
+    boolean canMove = true;
 
 
     @Override
@@ -66,12 +68,15 @@ public class Minicraft extends ApplicationAdapter {
     @Override
     public void render () {
         time += Gdx.graphics.getDeltaTime();
-
         player.move();
-        zombie.move();
+        zombie.move(canMove);
+        canMove = false;
         batch.begin();
         draw(player);
         draw(zombie);
+        if (time2 > 0.5) {
+            canMove = true;
+        }
         batch.end();
     }
 
